@@ -50,7 +50,7 @@ router.post('/', checkAuth, upload.single('postImage'), (req, res, next) => {
         }))
         .catch(err => {
             res.status(500).json({
-                Error: err
+                message: err
             })
         });
     } else {
@@ -67,7 +67,7 @@ router.post('/', checkAuth, upload.single('postImage'), (req, res, next) => {
         }))
         .catch(err => {
             res.status(500).json({
-                Error: err
+                message: err
             })
         });
     }
@@ -84,7 +84,7 @@ router.get('/', checkAuth, (req, res, next) => {
         result
     }))
     .catch(err => res.status(500).json({
-        Error: err
+        message: err
     }))
 })
 
@@ -97,7 +97,7 @@ router.get('/:id',checkAuth , (req, res, next) => {
         result
     }))
     .catch(err => res.status(500).json({
-        Error: err
+        message: err
     }))
 })
 
@@ -122,7 +122,7 @@ router.patch('/:id', checkAuth, (req, res, next) => {
                     }
                 )
                 .catch(err => res.status(500).json({
-                    Error: err
+                    message: err
                 }))
         } 
         update(updatedPost);
@@ -132,7 +132,7 @@ router.patch('/:id', checkAuth, (req, res, next) => {
                 message: 'Post Updated Successfully'
             }))
             .catch(err => res.status(500).json({
-                Error: err
+                message: err
             }))
         }
         
@@ -147,7 +147,7 @@ router.delete('/:id', checkAuth, (req, res, next) => {
         message: 'Post deleted Successfully'
     }))
     .catch(err => res.status(500).json({
-        Error: err
+        message: err
     }))
 });
 
