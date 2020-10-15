@@ -20,7 +20,7 @@ router.post('/', (req, res, next) => {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
                 if(err) {
                     res.status(401).json({
-                        error: err
+                        message: err
                     });
                 } else {
                     const user = new User({
@@ -49,7 +49,7 @@ router.post('/', (req, res, next) => {
                     })
                     .catch(err => {
                         res.status(500).json({
-                            error: err
+                            message: err
                         });
                     });
                 }
@@ -58,15 +58,19 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.post('/verify/:token', (req, res, next) => {
+router.post('/:token', (req, res, next) => {
     try {
         const decoded = jwt.verify(req.params.token, process.env.SECRET_KEY);
         if(decoded) {
-            User.update({token: req.params.token}, {$set: {verified: true}}).exec();
-            res.status(200).json({
-                message: 'User Verified Successfully!'
-            })
-            
+            User.updateOne({token: req.params.token}, {$set: {verified: true}})
+            .then(result => {
+                console.log(result);
+                res.status(200).json({
+                    message: 'User Verified Successfully!',
+                    user: result,
+                    verified: result.verified
+                })
+            });
         }
     } catch(err) {
         res.status(401).json({

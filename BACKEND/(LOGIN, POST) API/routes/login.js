@@ -5,21 +5,22 @@ const router = express.Router()
 const jwt = require('jsonwebtoken');
 
 router.post('/', (req, res, next) => {
-    User.find({email: req.body.email})
+    User.findOne({email: req.body.email})
     .exec()
     .then(user => {
         if(user) {
-            bcrypt.compare(req.body.password, user[0].password, 
+            bcrypt.compare(req.body.password, user.password, 
             (err, result) => {
                 if(result) {
-                    if(user[0].verified) {
+                    if(user.verified) {
                         return res.status(200).json({
                             message: 'Logged In Successfully',
-                            token: `Your token ${user[0].token}`
-                        });
-                        
+                            token: `Your token ${user.token}`,
+                            user: user
+                        });  
                     } else {
-                        return res.status(200).json({
+                        console.log(user)
+                        return res.status(201).json({
                             message: 'User Not Verified'
                         })
                     }
@@ -37,7 +38,7 @@ router.post('/', (req, res, next) => {
     })
     .catch(err => {
         res.status(500).json({
-            error: err
+            message: err
         })
     })
 });
