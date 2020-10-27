@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styles from './styles.module.css';
 import {Redirect} from 'react-router-dom';
+import NavWithoutLogin from './NavWithoutLogin';
 
 class Signup extends Component {
     constructor(props) {
@@ -53,6 +54,7 @@ class Signup extends Component {
         const redirect = this.state.isRegistered ? <Redirect to="/verify" /> : '';
         return (
             <div>
+                <NavWithoutLogin />
                 <div className={styles.formContainer}>
                     <h1>SIGN UP</h1>
                     <form className={styles.form}>

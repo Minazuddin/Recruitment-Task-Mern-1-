@@ -23,11 +23,13 @@ const uri = 'mongodb+srv://minhaj:' + process.env.DB_PASSWORD + '@node-api-shop.
 const loginRouter = require('./routes/login')
 const signUpRouter = require('./routes/signup')
 const postRouter = require('./routes/post')
+const logoutRouter = require('./routes/logout')
 
 app.use(cors());
 
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
 app.use('/post', postRouter);
+app.use('/logout', logoutRouter);
 
 module.exports = app;

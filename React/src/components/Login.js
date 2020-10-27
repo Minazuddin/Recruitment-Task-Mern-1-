@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
 import styles from './styles.module.css';
+import {Redirect, Link} from 'react-router-dom';
+import NavWithoutLogin from './NavWithoutLogin';
+
+const linkStyle = {
+    textDecoration: 'none'
+}
 
 class Login extends Component {
     constructor(props) {
@@ -7,7 +13,8 @@ class Login extends Component {
     
         this.state = {
              email: '',
-             password: ''
+             password: '',
+             isLoggedIn: false
         }
         
     this.inputHandler = (event) => {
@@ -30,18 +37,25 @@ class Login extends Component {
         .then(response => response.json())
         .then(data => {
             if(data.token) {
-                localStorage.setItem('myToken', data.token);
+                sessionStorage.setItem('isLoggedIn', data.user.isLoggedIn);
+                sessionStorage.setItem('userToken', data.user.token);
+                sessionStorage.setItem('userId', data.user._id);
+                this.setState({
+                    isLoggedIn: true
+                })
+                
             }
             alert(data.message);
-            alert(data.user.verified);
         })
         }
     }
 
 
     render() {
+        const welcome = this.state.isLoggedIn ? <Redirect to="/create-post" />: '';
         return (
             <div>
+                <NavWithoutLogin />
                 <div className={styles.formContainer}>
                     <h1>LOGIN</h1>
                     <form className={styles.form}>
@@ -49,7 +63,12 @@ class Login extends Component {
                         <input type="password" name="password" value={this.state.password} onChange={this.inputHandler} placeholder="password" />
                         <button className={styles.login} type="submit" onClick={this.login}>Login</button>                 
                     </form>
-                    <button className={styles.register}>Register</button>
+                    <Link to="/signup" style={linkStyle}>
+                         <button className={styles.register}>Register</button>
+                    </Link>
+                </div>
+                <div>
+                    {welcome}
                 </div>
             </div>
         )

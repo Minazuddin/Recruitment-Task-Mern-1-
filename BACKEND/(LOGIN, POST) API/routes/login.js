@@ -13,11 +13,27 @@ router.post('/', (req, res, next) => {
             (err, result) => {
                 if(result) {
                     if(user.verified) {
-                        return res.status(200).json({
-                            message: 'Logged In Successfully',
-                            token: `Your token ${user.token}`,
-                            user: user
-                        });  
+                        User.findOneAndUpdate({email: user.email}, {$set: {token: jwt.sign(
+                            {
+                                email: user.email,
+                                password: user.password
+                            },
+                            process.env.SECRET_KEY,
+                            {
+                                expiresIn: '1d'
+                            }
+                         ),
+                         isLoggedIn: true
+                        },
+                        
+                        }, { useFindAndModify: false})
+                        .then(doc => {
+                            return res.status(200).json({
+                                message: 'Logged In Successfully',
+                                token: doc.token,
+                                user: doc
+                            });
+                        })
                     } else {
                         console.log(user)
                         return res.status(201).json({
